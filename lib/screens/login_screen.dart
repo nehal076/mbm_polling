@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailId =
       TextEditingController(text: "18MCA10026");
   final TextEditingController _password = TextEditingController(
-      text: "9c3f9a82855a5f729ff28366f3d21558fe06cdea0b4246f1ec830ae34f59e6ea");
+      text: "a6b611aa3a783cebc9d416dd1f2845845c3b373bc512f31b6324b21ae02da2d8");
   final TextEditingController _adminPassword = TextEditingController();
   int segmentedControlValue = 0;
   bool _isObscure = false;

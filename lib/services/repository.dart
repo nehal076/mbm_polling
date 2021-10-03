@@ -27,4 +27,12 @@ class Repository {
 
   Future<GetResultByPollId> getResultByPollId(Map<String, dynamic> request) =>
       ApiProvider.getResultByPollId(request);
+
+  Future<CommonResponse> closePoll(Map<String, dynamic> request,
+          {Map<String, dynamic>? postParams}) =>
+      ApiProvider.closePoll(request, postParams: postParams);
+
+  Future<CommonResponse> createPoll(Map<String, dynamic> request,
+          {Map<String, dynamic>? postParams}) =>
+      ApiProvider.createPoll(request, postParams: postParams);
 }

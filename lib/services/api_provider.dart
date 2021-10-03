@@ -114,4 +114,34 @@ class ApiProvider {
 
     return GetResultByPollId.fromJson(json.decode(response.body));
   }
+
+  static Future<CommonResponse> closePoll(Map<String, dynamic> request,
+      {Map<String, dynamic>? postParams}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await ApiService.makeRequest(
+        RequestType.POST, 'invoke/closePoll', request, headers,
+        postParams: postParams);
+    log(jsonEncode(request));
+    log(response!.body);
+
+    return CommonResponse.fromJson(json.decode(response.body));
+  }
+
+  static Future<CommonResponse> createPoll(Map<String, dynamic> request,
+      {Map<String, dynamic>? postParams}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await ApiService.makeRequest(
+        RequestType.POST, 'invoke/createPoll', request, headers,
+        postParams: postParams);
+    log(jsonEncode(request));
+    log(response!.body);
+
+    return CommonResponse.fromJson(json.decode(response.body));
+  }
 }

@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/screens/closed_polls.dart';
-import 'package:mbm_voting/screens/login_screen.dart';
+import 'package:mbm_voting/screens/create_poll.dart';
 import 'package:mbm_voting/screens/my_votes.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class MyDrawer extends StatefulWidget {
-  const MyDrawer({Key? key}) : super(key: key);
+class AdminDrawer extends StatefulWidget {
+  const AdminDrawer({Key? key}) : super(key: key);
 
   @override
-  State<MyDrawer> createState() => _MyDrawerState();
+  State<AdminDrawer> createState() => _AdminDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
+class _AdminDrawerState extends State<AdminDrawer> {
   String rollNumber = "";
 
   @override
@@ -61,8 +61,8 @@ class _MyDrawerState extends State<MyDrawer> {
                       ).pOnly(right: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
+                        children: const [
+                          Text(
                             'Welcome',
                             style: TextStyle(
                               color: Colors.black,
@@ -71,8 +71,8 @@ class _MyDrawerState extends State<MyDrawer> {
                             ),
                           ),
                           Text(
-                            rollNumber,
-                            style: const TextStyle(
+                            "Admin",
+                            style: TextStyle(
                               color: Colors.black,
                               fontSize: 17,
                               fontFamily: 'OpenSans',
@@ -103,10 +103,16 @@ class _MyDrawerState extends State<MyDrawer> {
                   shrinkWrap: true,
                   children: const [
                     DrawerTile(
-                      heading: 'My Votes',
-                      subtitle: 'Check out your votes ',
+                      heading: 'Create a Poll',
+                      subtitle: 'Create a shiny new Poll',
                       icon: CupertinoIcons.game_controller,
-                      navigateTo: MyVotes(),
+                      navigateTo: CreatePoll(),
+                    ),
+                    DrawerTile(
+                      heading: 'Get All Results',
+                      subtitle: 'Get All Results',
+                      icon: CupertinoIcons.bolt,
+                      navigateTo: ClosedPolls(),
                     ),
                     DrawerTile(
                       heading: 'Closed Polls',
@@ -118,7 +124,6 @@ class _MyDrawerState extends State<MyDrawer> {
                       heading: 'Logout',
                       subtitle: '',
                       icon: CupertinoIcons.gear,
-                      navigateTo: LoginScreen(),
                     ),
                   ],
                 ),

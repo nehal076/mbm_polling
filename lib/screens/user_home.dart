@@ -26,8 +26,6 @@ class _UserHomeState extends State<UserHome> {
   }
 
   void _onLoading() async {
-    // monitor network fetch
-    _callActivePollsApi();
     if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
