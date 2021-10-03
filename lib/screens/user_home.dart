@@ -4,6 +4,7 @@ import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/models/all_active_polls.dart';
 import 'package:mbm_voting/models/registration.dart';
 import 'package:mbm_voting/services/repository.dart';
+import 'package:mbm_voting/widgets/drawer.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -103,7 +104,7 @@ class _UserHomeState extends State<UserHome> {
           itemCount: polls.length,
         ),
       ),
-      drawer: const Drawer(),
+      drawer: const MyDrawer(),
     );
   }
 

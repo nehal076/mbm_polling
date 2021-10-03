@@ -21,8 +21,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _adminFormKey = GlobalKey<FormState>();
-  final TextEditingController _emailId = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  final TextEditingController _emailId =
+      TextEditingController(text: "18MCA10026");
+  final TextEditingController _password = TextEditingController(
+      text: "9c3f9a82855a5f729ff28366f3d21558fe06cdea0b4246f1ec830ae34f59e6ea");
   final TextEditingController _adminPassword = TextEditingController();
   int segmentedControlValue = 0;
   bool _isObscure = false;
@@ -124,6 +126,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                 //return null;
                               },
                             ).px20(),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegistrationScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Center(
+                                child: Text(
+                                  'New here? Register here',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ).py32(),
+                            ),
                           ],
                         ),
                       )
@@ -167,25 +189,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegistrationScreen(),
-                      ),
-                    );
-                  },
-                  child: const Center(
-                    child: Text(
-                      'New here? Register here',
-                      style: TextStyle(
-                        fontSize: 24,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ).py32(),
-                ),
                 Expanded(
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,

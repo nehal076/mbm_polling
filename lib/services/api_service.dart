@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mbm_voting/common/constants.dart';
+import 'package:mbm_voting/main.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 enum RequestType { GET, POST, DELETE }
 
@@ -15,23 +19,62 @@ class ApiService {
 
     switch (requestType) {
       case RequestType.GET:
-        String queryString = Uri(queryParameters: parameter).query;
-        final Response response = await client.get(
-          Uri.parse('$_baseUrl/$path?' + queryString),
-          headers: headers,
-        );
-        if (response.statusCode == 200) {
-          return response;
-        } else {
-          return null;
+        try {
+          String queryString = Uri(queryParameters: parameter).query;
+          final Response response = await client.get(
+            Uri.parse('$_baseUrl/$path?' + queryString),
+            headers: headers,
+          );
+          if (response.statusCode == 200) {
+            return response;
+          } else {
+            return null;
+          }
+        } on SocketException {
+          Alert(
+            context: navigatorKey.currentContext!,
+            type: AlertType.error,
+            desc: "Socket Exception",
+            buttons: [
+              DialogButton(
+                child: const Text(
+                  "Okay",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+                width: 120,
+              )
+            ],
+          ).show();
         }
+        break;
+
       case RequestType.POST:
-        String queryString = Uri(queryParameters: postParams).query;
-        return client.post(
-          Uri.parse("$_baseUrl/$path?" + queryString),
-          headers: headers,
-          body: json.encode(parameter),
-        );
+        try {
+          String queryString = Uri(queryParameters: postParams).query;
+          return client.post(
+            Uri.parse("$_baseUrl/$path?" + queryString),
+            headers: headers,
+            body: json.encode(parameter),
+          );
+        } on SocketException {
+          Alert(
+            context: navigatorKey.currentContext!,
+            type: AlertType.error,
+            desc: "Socket Exception",
+            buttons: [
+              DialogButton(
+                child: const Text(
+                  "Okay",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+                width: 120,
+              )
+            ],
+          ).show();
+        }
+        break;
       default:
         return throw Exception("The HTTP request method is not found");
     }

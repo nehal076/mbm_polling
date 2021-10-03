@@ -104,7 +104,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         decoration: InputDecoration(
                           border: const UnderlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: 'Enter your password',
+                          labelText: 'Enter password provided by admin',
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isObscure

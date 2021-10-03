@@ -1,4 +1,6 @@
 import 'package:mbm_voting/models/all_active_polls.dart';
+import 'package:mbm_voting/models/get_all_votes.dart';
+import 'package:mbm_voting/models/get_result_by_poll_id.dart';
 import 'package:mbm_voting/models/registration.dart';
 import 'package:mbm_voting/services/api_provider.dart';
 
@@ -17,4 +19,12 @@ class Repository {
   Future<CommonResponse> createVote(Map<String, dynamic> request,
           {Map<String, dynamic>? postParams}) =>
       ApiProvider.createVote(request, postParams: postParams);
+
+  Future<GetAllVotesByVoter> getAllVotesByVoter(Map<String, dynamic> request) =>
+      ApiProvider.getAllVotesByVoter(request);
+
+  Future<AllActivePolls> allClosedPolls() => ApiProvider.allClosedPolls();
+
+  Future<GetResultByPollId> getResultByPollId(Map<String, dynamic> request) =>
+      ApiProvider.getResultByPollId(request);
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MyAlert extends StatelessWidget {
   const MyAlert({Key? key}) : super(key: key);
