@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/screens/closed_polls.dart';
 import 'package:mbm_voting/screens/create_poll.dart';
-import 'package:mbm_voting/screens/my_votes.dart';
+import 'package:mbm_voting/screens/login_screen.dart';
+import 'package:mbm_voting/widgets/drawer.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AdminDrawer extends StatefulWidget {
@@ -124,6 +125,7 @@ class _AdminDrawerState extends State<AdminDrawer> {
                       heading: 'Logout',
                       subtitle: '',
                       icon: CupertinoIcons.gear,
+                      navigateTo: LoginScreen(),
                     ),
                   ],
                 ),
@@ -132,67 +134,6 @@ class _AdminDrawerState extends State<AdminDrawer> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DrawerTile extends StatelessWidget {
-  final String heading;
-  final String subtitle;
-  final IconData icon;
-  final Widget? navigateTo;
-
-  const DrawerTile({
-    Key? key,
-    required this.heading,
-    required this.subtitle,
-    required this.icon,
-    this.navigateTo,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      // leading: Icon(
-      //   icon,
-      //   color: Colors.grey[400],
-      // ),
-      title: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              heading,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'OpenSans',
-                color: Colors.black,
-              ),
-            ).pOnly(bottom: 4),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'OpenSans',
-                color: Colors.black.withOpacity(0.4),
-              ),
-            ),
-          ],
-        ),
-      ),
-      onTap: () {
-        Navigator.pop(context);
-        navigateTo == null
-            ? {}
-            : Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => navigateTo!,
-                ),
-              );
-      },
     );
   }
 }

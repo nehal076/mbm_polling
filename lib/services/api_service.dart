@@ -52,11 +52,16 @@ class ApiService {
       case RequestType.POST:
         try {
           String queryString = Uri(queryParameters: postParams).query;
-          return client.post(
+          final Response response = await client.post(
             Uri.parse("$_baseUrl/$path?" + queryString),
             headers: headers,
             body: json.encode(parameter),
           );
+          if (response.statusCode == 200) {
+            return response;
+          } else {
+            return null;
+          }
         } on SocketException {
           Alert(
             context: navigatorKey.currentContext!,

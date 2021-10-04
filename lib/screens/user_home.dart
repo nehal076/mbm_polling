@@ -49,58 +49,71 @@ class _UserHomeState extends State<UserHome> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: const Icon(Icons.poll),
-              title: Text(polls[index].ques),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Alert(
-                  context: context,
-                  desc: polls[index].ques,
-                  buttons: [
-                    DialogButton(
-                      child: const Text(
-                        "YES",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      onPressed: () {
-                        MySharedPreferences.instance
-                            .getStringValue("rollNumber")
-                            .then((rollNumber) {
-                          _callCreateVote(
-                              polls[index].pollId, rollNumber, true);
+        child: polls.isNotEmpty
+            ? ListView.builder(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.poll),
+                    title: Text(polls[index].ques),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Alert(
+                        context: context,
+                        desc: polls[index].ques,
+                        buttons: [
+                          DialogButton(
+                            child: const Text(
+                              "YES",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () {
+                              MySharedPreferences.instance
+                                  .getStringValue("rollNumber")
+                                  .then((rollNumber) {
+                                _callCreateVote(
+                                    polls[index].pollId, rollNumber, true);
 
-                          Navigator.pop(context);
-                        });
-                      },
-                      width: 120,
-                    ),
-                    DialogButton(
-                      child: const Text(
-                        "NO",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      onPressed: () {
-                        MySharedPreferences.instance
-                            .getStringValue("rollNumber")
-                            .then((rollNumber) {
-                          _callCreateVote(
-                              polls[index].pollId, rollNumber, false);
+                                Navigator.pop(context);
+                              });
+                            },
+                            width: 120,
+                          ),
+                          DialogButton(
+                            child: const Text(
+                              "NO",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () {
+                              MySharedPreferences.instance
+                                  .getStringValue("rollNumber")
+                                  .then((rollNumber) {
+                                _callCreateVote(
+                                    polls[index].pollId, rollNumber, false);
 
-                          Navigator.pop(context);
-                        });
-                      },
-                      width: 120,
-                    ),
-                  ],
-                ).show();
-              },
-            );
-          },
-          itemCount: polls.length,
-        ),
+                                Navigator.pop(context);
+                              });
+                            },
+                            width: 120,
+                          ),
+                        ],
+                      ).show();
+                    },
+                  );
+                },
+                itemCount: polls.length,
+              )
+            : const Center(
+                child: Text(
+                  "No Active Polls!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey,
+                  ),
+                ),
+              ),
       ),
       drawer: const MyDrawer(),
     );

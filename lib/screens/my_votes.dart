@@ -47,19 +47,30 @@ class _MyVotesState extends State<MyVotes> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: const Icon(Icons.poll),
-              title: Text('Poll ID (' +
-                  polls[index].pollId +
-                  '): You voted ' +
-                  polls[index].ans.toString()),
-              onTap: () {},
-            );
-          },
-          itemCount: polls.length,
-        ),
+        child: polls.isNotEmpty
+            ? ListView.builder(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.poll),
+                    title: Text('Poll ID (' +
+                        polls[index].pollId +
+                        '): You voted ' +
+                        polls[index].ans.toString()),
+                    onTap: () {},
+                  );
+                },
+                itemCount: polls.length,
+              )
+            : const Center(
+                child: Text(
+                  "You have not voted for any poll yet!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey,
+                  ),
+                ),
+              ),
       ),
     );
   }
