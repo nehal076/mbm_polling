@@ -16,18 +16,21 @@ class AllActivePolls {
   });
 
   bool success;
-  List<Message>? message;
+  dynamic message;
 
   factory AllActivePolls.fromJson(Map<String, dynamic> json) => AllActivePolls(
         success: json["success"],
-        message:
-            List<Message>.from(json["message"].map((x) => Message.fromJson(x))),
+        message: json["message"] is List
+            ? List<Message>.from(
+                json["message"].map((x) => Message.fromJson(x)))
+            : json["message"],
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
-        "message":
-            message ?? List<dynamic>.from(message!.map((x) => x.toJson())),
+        "message": message is List
+            ? List<dynamic>.from(message!.map((x) => x.toJson()))
+            : message,
       };
 }
 
@@ -36,21 +39,25 @@ class Message {
     required this.pollId,
     required this.ques,
     required this.active,
+    required this.txnTd,
   });
 
   String pollId;
   String ques;
   bool active;
+  String txnTd;
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
         pollId: json["pollID"],
         ques: json["ques"],
         active: json["active"],
+        txnTd: json["txnTd"],
       );
 
   Map<String, dynamic> toJson() => {
         "pollID": pollId,
         "ques": ques,
         "active": active,
+        "txnTd": txnTd,
       };
 }

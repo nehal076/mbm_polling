@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -28,13 +27,13 @@ class ApiService {
           if (response.statusCode == 200) {
             return response;
           } else {
-            return null;
+            throw Exception(response.body);
           }
-        } on SocketException {
+        } catch (e) {
           Alert(
             context: navigatorKey.currentContext!,
             type: AlertType.error,
-            desc: "Socket Exception",
+            desc: "$e",
             buttons: [
               DialogButton(
                 child: const Text(
@@ -60,13 +59,13 @@ class ApiService {
           if (response.statusCode == 200) {
             return response;
           } else {
-            return null;
+            throw Exception(response.body);
           }
-        } on SocketException {
+        } catch (e) {
           Alert(
             context: navigatorKey.currentContext!,
             type: AlertType.error,
-            desc: "Socket Exception",
+            desc: "$e",
             buttons: [
               DialogButton(
                 child: const Text(

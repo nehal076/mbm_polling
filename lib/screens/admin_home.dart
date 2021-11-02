@@ -39,6 +39,7 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Admin Home'),
       ),
@@ -49,55 +50,69 @@ class _AdminHomeState extends State<AdminHome> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: polls.isNotEmpty
-            ? ListView.builder(
-                itemCount: polls.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Icon(Icons.poll),
-                    title: Text(polls[index].ques),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {
-                      Alert(
-                        context: context,
-                        type: AlertType.info,
-                        desc: "Close this Poll?",
-                        buttons: [
-                          DialogButton(
-                            child: const Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+            ? Align(
+                alignment: Alignment.topCenter,
+                child: ListView.builder(
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemCount: polls.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const Icon(Icons.poll),
+                      title: Text(polls[index].ques),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Alert(
+                          context: context,
+                          type: AlertType.info,
+                          desc: "Close this Poll?",
+                          buttons: [
+                            DialogButton(
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            width: 120,
-                          ),
-                          DialogButton(
-                            color: Colors.redAccent,
-                            child: const Text(
-                              "Close Now",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                            onPressed: () {
-                              _callClosePollApi(polls[index].pollId);
-                              Navigator.pop(context);
-                            },
-                            width: 120,
-                          )
-                        ],
-                      ).show();
-                    },
-                  );
-                },
+                            DialogButton(
+                              color: Colors.redAccent,
+                              child: const Text(
+                                "Close Now",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () {
+                                _callClosePollApi(polls[index].pollId);
+                                Navigator.pop(context);
+                              },
+                              width: 120,
+                            )
+                          ],
+                        ).show();
+                      },
+                    );
+                  },
+                ),
               )
-            : const Center(
-                child: Text(
-                  "No Active Polls!",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey,
-                  ),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/no_data.png',
+                      width: 300,
+                    ),
+                    const Text(
+                      'No Active Polls ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
       ),
@@ -112,8 +127,10 @@ class _AdminHomeState extends State<AdminHome> {
 
     if (response.success == true) {
       setState(() {
-        for (var element in response.message ?? []) {
-          polls.add(element);
+        if (response.message is List) {
+          for (var element in response.message) {
+            polls.add(element);
+          }
         }
       });
     }
@@ -124,9 +141,25 @@ class _AdminHomeState extends State<AdminHome> {
       "params": [pollId]
     };
 
+    setState(() {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      Alert(context: context).show();
+    });
+
     CommonResponse response = await repo.closePoll(request, postParams: {
       "rollNo": "admin",
     });
+
+    Navigator.pop(context);
 
     if (response.success == true) {
       Alert(
@@ -143,6 +176,7 @@ class _AdminHomeState extends State<AdminHome> {
               setState(() {
                 _callActivePollsApi();
               });
+              Navigator.pop(context);
               Navigator.pop(context);
             },
             width: 120,

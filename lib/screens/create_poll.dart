@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/models/registration.dart';
+import 'package:mbm_voting/screens/admin_home.dart';
 import 'package:mbm_voting/services/repository.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -132,9 +133,25 @@ class _CreatePollState extends State<CreatePoll> {
       "params": [question]
     };
     Repository repo = Repository();
+
+    setState(() {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+      Alert(context: context).show();
+    });
+
     CommonResponse response = await repo.createPoll(request, postParams: {
       "rollNo": "admin",
     });
+
+    Navigator.pop(context);
 
     if (response.success == true) {
       Alert(
@@ -147,7 +164,16 @@ class _CreatePollState extends State<CreatePoll> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdminHome(),
+                ),
+              );
+            },
             width: 120,
           )
         ],

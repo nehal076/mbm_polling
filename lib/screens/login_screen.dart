@@ -21,14 +21,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _adminFormKey = GlobalKey<FormState>();
-  final TextEditingController _emailId =
-      TextEditingController(text: "18MCA10026");
-  final TextEditingController _password = TextEditingController(
-      text: "804f493cdfb4e7794e8dcffb2d3523a8f192f27fc80b92024dfe62b274065172");
-  final TextEditingController _adminPassword =
-      TextEditingController(text: "secret");
+  final TextEditingController _emailId = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _adminPassword = TextEditingController();
   int segmentedControlValue = 0;
-  bool _isObscure = false;
+  bool _isObscure = true;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,194 +36,209 @@ class _LoginScreenState extends State<LoginScreen> {
         shadowColor: Colors.transparent,
         title: const Text('Studypods Blockchain'),
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height - kToolbarHeight,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Image.asset(
-                  'assets/dsc.png',
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.cover,
-                ),
-                const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 24),
-                ).p20(),
-                CupertinoSlidingSegmentedControl(
-                  groupValue: segmentedControlValue,
-                  onValueChanged: (value) {
-                    setState(() {
-                      segmentedControlValue = int.parse(value!.toString());
-                    });
-                  },
-                  children: const <int, Widget>{
-                    0: Text('User'),
-                    1: Text('Admin'),
-                  },
-                ),
-                segmentedControlValue == 0
-                    ? Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Roll Number',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ).px20().pOnly(top: 20),
-                            TextFormField(
-                              controller: _emailId,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: 'Enter your roll number',
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Roll number cannot be empty";
-                                }
-                              },
-                            ).px20(),
-                            const Text(
-                              'Password',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ).px20().pOnly(top: 20),
-                            TextFormField(
-                              controller: _password,
-                              obscureText: _isObscure,
-                              decoration: InputDecoration(
-                                border: const UnderlineInputBorder(),
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: 'Enter your password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isObscure
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+          ListView(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height - kToolbarHeight,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Image.asset(
+                      'assets/dsc.png',
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    const Text(
+                      'Login',
+                      style: TextStyle(fontSize: 24),
+                    ).p20(),
+                    CupertinoSlidingSegmentedControl(
+                      groupValue: segmentedControlValue,
+                      onValueChanged: (value) {
+                        setState(() {
+                          segmentedControlValue = int.parse(value!.toString());
+                        });
+                      },
+                      children: const <int, Widget>{
+                        0: Text('User'),
+                        1: Text('Admin'),
+                      },
+                    ),
+                    segmentedControlValue == 0
+                        ? Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Roll Number',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ).px20().pOnly(top: 20),
+                                TextFormField(
+                                  controller: _emailId,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    labelText: 'Enter your roll number',
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure;
-                                    });
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Roll number cannot be empty";
+                                    }
                                   },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Password cannot be empty";
-                                }
-                                //return null;
-                              },
-                            ).px20(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegistrationScreen(),
+                                ).px20(),
+                                const Text(
+                                  'Password',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ).px20().pOnly(top: 20),
+                                TextFormField(
+                                  controller: _password,
+                                  obscureText: _isObscure,
+                                  decoration: InputDecoration(
+                                    border: const UnderlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    labelText: 'Enter your password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                );
-                              },
-                              child: const Center(
-                                child: Text(
-                                  'New here? Register here',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    decoration: TextDecoration.underline,
-                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Password cannot be empty";
+                                    }
+                                    //return null;
+                                  },
+                                ).px20(),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegistrationScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Center(
+                                    child: Text(
+                                      'New here? Register here',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ).py32(),
                                 ),
-                              ).py32(),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    : Form(
-                        key: _adminFormKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Password',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ).px20().pOnly(top: 20),
-                            TextFormField(
-                              controller: _adminPassword,
-                              obscureText: _isObscure,
-                              decoration: InputDecoration(
-                                border: const UnderlineInputBorder(),
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: 'Enter your password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isObscure
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                          )
+                        : Form(
+                            key: _adminFormKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Password',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ).px20().pOnly(top: 20),
+                                TextFormField(
+                                  controller: _adminPassword,
+                                  obscureText: _isObscure,
+                                  decoration: InputDecoration(
+                                    border: const UnderlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    labelText: 'Enter your password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure;
-                                    });
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Password cannot be empty";
+                                    }
+                                    //return null;
                                   },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Password cannot be empty";
+                                ).px20(),
+                              ],
+                            ),
+                          ),
+                    Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: ButtonTheme(
+                          minWidth: context.screenWidth - 50,
+                          height: 60,
+                          child: MaterialButton(
+                            onPressed: () {
+                              if (segmentedControlValue == 0) {
+                                if (_formKey.currentState!.validate()) {
+                                  _callUserLogin();
                                 }
-                                //return null;
-                              },
-                            ).px20(),
-                          ],
-                        ),
+                              } else {
+                                if (_adminFormKey.currentState!.validate()) {
+                                  _callAdminLogin();
+                                }
+                              }
+                            },
+                            color: Colors.green,
+                            child: const Text(
+                              'Login',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                        ).pOnly(bottom: context.screenHeight > 600 ? 40 : 10),
                       ),
-                Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: ButtonTheme(
-                      minWidth: context.screenWidth - 50,
-                      height: 60,
-                      child: MaterialButton(
-                        onPressed: () {
-                          if (segmentedControlValue == 0) {
-                            if (_formKey.currentState!.validate()) {
-                              _callUserLogin();
-                            }
-                          } else {
-                            if (_adminFormKey.currentState!.validate()) {
-                              _callAdminLogin();
-                            }
-                          }
-                        },
-                        color: Colors.green,
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                      ),
-                    ).pOnly(bottom: context.screenHeight > 600 ? 40 : 10),
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container()
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   _callUserLogin() async {
@@ -236,12 +249,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
     log(request.toString());
     Repository repo = Repository();
+
+    setState(() {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+      Alert(context: context).show();
+    });
     CommonResponse response = await repo.loginUser(request);
+
+    Navigator.pop(context);
 
     if (response.success == true) {
       MySharedPreferences.instance.setStringValue("rollNumber", _emailId.text);
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const UserHome(),
@@ -258,7 +286,9 @@ class _LoginScreenState extends State<LoginScreen> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
             width: 120,
           )
         ],
@@ -272,7 +302,23 @@ class _LoginScreenState extends State<LoginScreen> {
     };
     log(request.toString());
     Repository repo = Repository();
+
+    setState(() {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+      Alert(context: context).show();
+    });
+
     CommonResponse response = await repo.loginAdmin(request);
+
+    Navigator.pop(context);
 
     if (response.success == true) {
       Navigator.push(

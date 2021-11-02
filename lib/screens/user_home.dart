@@ -4,6 +4,7 @@ import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/models/all_active_polls.dart';
 import 'package:mbm_voting/models/registration.dart';
 import 'package:mbm_voting/services/repository.dart';
+import 'package:mbm_voting/widgets/alert_view.dart';
 import 'package:mbm_voting/widgets/drawer.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -19,6 +20,7 @@ class _UserHomeState extends State<UserHome> {
   Repository repo = Repository();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  bool noActivePolls = false;
 
   void _onRefresh() async {
     _callActivePollsApi();
@@ -33,15 +35,18 @@ class _UserHomeState extends State<UserHome> {
   List<Message> polls = [];
   @override
   void initState() {
-    _callActivePollsApi();
     super.initState();
+    Future.delayed(Duration.zero, () {
+      _callActivePollsApi();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('User Home'),
+        title: const Text('Active Polls'),
       ),
       body: SmartRefresher(
         header: const MaterialClassicHeader(),
@@ -49,69 +54,83 @@ class _UserHomeState extends State<UserHome> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: polls.isNotEmpty
-            ? ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Icon(Icons.poll),
-                    title: Text(polls[index].ques),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {
-                      Alert(
-                        context: context,
-                        desc: polls[index].ques,
-                        buttons: [
-                          DialogButton(
-                            child: const Text(
-                              "YES",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                            onPressed: () {
-                              MySharedPreferences.instance
-                                  .getStringValue("rollNumber")
-                                  .then((rollNumber) {
-                                _callCreateVote(
-                                    polls[index].pollId, rollNumber, true);
-
-                                Navigator.pop(context);
-                              });
-                            },
-                            width: 120,
-                          ),
-                          DialogButton(
-                            child: const Text(
-                              "NO",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                            onPressed: () {
-                              MySharedPreferences.instance
-                                  .getStringValue("rollNumber")
-                                  .then((rollNumber) {
-                                _callCreateVote(
-                                    polls[index].pollId, rollNumber, false);
-
-                                Navigator.pop(context);
-                              });
-                            },
-                            width: 120,
-                          ),
-                        ],
-                      ).show();
-                    },
-                  );
-                },
-                itemCount: polls.length,
+        child: noActivePolls
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/no_data.png',
+                      width: 300,
+                    ),
+                    const Text(
+                      'No Active Polls ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ],
+                ),
               )
-            : const Center(
-                child: Text(
-                  "No Active Polls!",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey,
-                  ),
+            : Align(
+                alignment: Alignment.topCenter,
+                child: ListView.builder(
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const Icon(Icons.poll),
+                      title: Text(polls[index].ques),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Alert(
+                          context: context,
+                          desc: polls[index].ques,
+                          buttons: [
+                            DialogButton(
+                              child: const Text(
+                                "YES",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () {
+                                MySharedPreferences.instance
+                                    .getStringValue("rollNumber")
+                                    .then((rollNumber) {
+                                  _callCreateVote(
+                                      polls[index].pollId, rollNumber, true);
+
+                                  Navigator.pop(context);
+                                });
+                              },
+                              width: 120,
+                            ),
+                            DialogButton(
+                              child: const Text(
+                                "NO",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () {
+                                MySharedPreferences.instance
+                                    .getStringValue("rollNumber")
+                                    .then((rollNumber) {
+                                  _callCreateVote(
+                                      polls[index].pollId, rollNumber, false);
+
+                                  Navigator.pop(context);
+                                });
+                              },
+                              width: 120,
+                            ),
+                          ],
+                        ).show();
+                      },
+                    );
+                  },
+                  itemCount: polls.length,
                 ),
               ),
       ),
@@ -124,9 +143,25 @@ class _UserHomeState extends State<UserHome> {
       "params": [pollId, vote]
     };
 
+    setState(() {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      Alert(context: context).show();
+    });
+
     CommonResponse response = await repo.createVote(request, postParams: {
       "rollNo": rollNumber,
     });
+
+    Navigator.pop(context);
 
     if (response.success == true) {
       Alert(
@@ -139,7 +174,10 @@ class _UserHomeState extends State<UserHome> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             width: 120,
           )
         ],
@@ -155,7 +193,10 @@ class _UserHomeState extends State<UserHome> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             width: 120,
           )
         ],
@@ -165,15 +206,20 @@ class _UserHomeState extends State<UserHome> {
 
   _callActivePollsApi() async {
     polls = [];
-
     AllActivePolls response = await repo.allActivePolls();
-
     if (response.success == true) {
+      noActivePolls = false;
       setState(() {
-        for (var element in response.message ?? []) {
-          polls.add(element);
+        if (response.message is List) {
+          for (var element in response.message) {
+            polls.add(element);
+          }
+        } else {
+          noActivePolls = true;
         }
       });
+    } else {
+      noActivePolls = true;
     }
   }
 }

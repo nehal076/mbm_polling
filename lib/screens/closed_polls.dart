@@ -82,8 +82,10 @@ class _ClosedPollsState extends State<ClosedPolls> {
 
     if (response.success == true) {
       setState(() {
-        for (var element in response.message ?? []) {
-          polls.add(element);
+        if (response.message is List) {
+          for (var element in response.message) {
+            polls.add(element);
+          }
         }
       });
     } else {

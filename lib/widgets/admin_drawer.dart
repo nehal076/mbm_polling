@@ -110,12 +110,6 @@ class _AdminDrawerState extends State<AdminDrawer> {
                       navigateTo: CreatePoll(),
                     ),
                     DrawerTile(
-                      heading: 'Get All Results',
-                      subtitle: 'Get All Results',
-                      icon: CupertinoIcons.bolt,
-                      navigateTo: ClosedPolls(),
-                    ),
-                    DrawerTile(
                       heading: 'Closed Polls',
                       subtitle: 'Check out results of closed Polls',
                       icon: CupertinoIcons.bolt,

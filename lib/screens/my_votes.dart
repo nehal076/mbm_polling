@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/models/get_all_votes.dart';
 import 'package:mbm_voting/services/repository.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter/services.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class MyVotes extends StatefulWidget {
   const MyVotes({Key? key}) : super(key: key);
@@ -48,18 +51,97 @@ class _MyVotesState extends State<MyVotes> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: polls.isNotEmpty
-            ? ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Icon(Icons.poll),
-                    title: Text('Poll ID (' +
-                        polls[index].pollId +
-                        '): You voted ' +
-                        polls[index].ans.toString()),
-                    onTap: () {},
-                  );
-                },
-                itemCount: polls.length,
+            ? Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            polls[index].ans == true
+                                ? CupertinoIcons.checkmark_alt_circle_fill
+                                : CupertinoIcons.checkmark_circle_fill,
+                            color: polls[index].ans == true
+                                ? Colors.green[800]
+                                : Colors.red[800],
+                          ),
+                        ],
+                      ),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            polls[index].ques + '',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'You voted ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                polls[index].ans == true ? "\"Yes\"" : "\"No\"",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ).py8(),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'Txn Id: ${polls[index].txnId}',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  softWrap: false,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: polls[index].txnId),
+                                  ).then((_) {
+                                    Scaffold.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "Transaction Id copied to clipboard"),
+                                      ),
+                                    );
+                                  });
+                                },
+                                icon: const Icon(Icons.copy),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: polls.length,
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: Colors.blueGrey,
+                    );
+                  },
+                ),
               )
             : const Center(
                 child: Text(
@@ -88,8 +170,10 @@ class _MyVotesState extends State<MyVotes> {
 
       if (response.success == true) {
         setState(() {
-          for (var element in response.message ?? []) {
-            polls.add(element);
+          if (response.message is List) {
+            for (var element in response.message) {
+              polls.add(element);
+            }
           }
         });
       } else {

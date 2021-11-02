@@ -20,7 +20,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _rollNumber = TextEditingController();
   final TextEditingController _emailId = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  bool _isObscure = false;
+  bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

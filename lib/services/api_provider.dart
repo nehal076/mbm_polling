@@ -66,7 +66,7 @@ class ApiProvider {
     final response = await ApiService.makeRequest(
         RequestType.POST, 'invoke/createVote', request, headers,
         postParams: postParams);
-    log(jsonEncode(request));
+    log(jsonEncode([request, postParams]));
     log(response!.body);
 
     return CommonResponse.fromJson(json.decode(response.body));
