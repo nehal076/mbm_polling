@@ -119,7 +119,7 @@ class _MyVotesState extends State<MyVotes> {
                                   Clipboard.setData(
                                     ClipboardData(text: polls[index].txnId),
                                   ).then((_) {
-                                    Scaffold.of(context).showSnackBar(
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text(
                                             "Transaction Id copied to clipboard"),

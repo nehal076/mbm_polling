@@ -24,9 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailId = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _adminPassword = TextEditingController();
+  final TextEditingController _walletPassword = TextEditingController();
   int segmentedControlValue = 0;
-  bool _isObscure = true;
+  bool _isObscure = false;
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (value!.isEmpty) {
                                       return "Roll number cannot be empty";
                                     }
+                                    return null;
                                   },
                                 ).px20(),
                                 const Text(
@@ -101,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ).px20().pOnly(top: 20),
                                 TextFormField(
                                   controller: _password,
-                                  obscureText: _isObscure,
+                                  obscureText: !_isObscure,
                                   decoration: InputDecoration(
                                     border: const UnderlineInputBorder(),
                                     floatingLabelBehavior:
@@ -110,8 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _isObscure
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -124,7 +127,39 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (value!.isEmpty) {
                                       return "Password cannot be empty";
                                     }
-                                    //return null;
+                                    return null;
+                                  },
+                                ).px20(),
+                                const Text(
+                                  'Wallet Password',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ).px20().pOnly(top: 20),
+                                TextFormField(
+                                  controller: _walletPassword,
+                                  obscureText: !_isObscure,
+                                  decoration: InputDecoration(
+                                    border: const UnderlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    labelText: 'Enter your wallet password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Wallet password cannot be empty";
+                                    }
+                                    return null;
                                   },
                                 ).px20(),
                                 GestureDetector(
@@ -161,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ).px20().pOnly(top: 20),
                                 TextFormField(
                                   controller: _adminPassword,
-                                  obscureText: _isObscure,
+                                  obscureText: !_isObscure,
                                   decoration: InputDecoration(
                                     border: const UnderlineInputBorder(),
                                     floatingLabelBehavior:
@@ -170,8 +205,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _isObscure
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -184,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (value!.isEmpty) {
                                       return "Password cannot be empty";
                                     }
-                                    //return null;
+                                    return null;
                                   },
                                 ).px20(),
                               ],
@@ -236,15 +271,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   _callUserLogin() async {
     Map<String, dynamic> request = {
       "rollNo": _emailId.text,
-      "keyHash": _password.text,
+      "keyHash": _walletPassword.text,
+      "password": _password.text,
     };
 
     log(request.toString());
@@ -261,6 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
     });
+
     CommonResponse response = await repo.loginUser(request);
 
     Navigator.pop(context);
@@ -268,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.success == true) {
       MySharedPreferences.instance.setStringValue("rollNumber", _emailId.text);
 
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const UserHome(),
@@ -285,9 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             width: 120,
           )
         ],
@@ -338,9 +368,7 @@ class _LoginScreenState extends State<LoginScreen> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             width: 120,
           )
         ],

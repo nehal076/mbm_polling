@@ -1,6 +1,6 @@
 name: mbm_voting
 description: A new Flutter project.
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   http: ^0.13.3
-  velocity_x: ^3.3.0
+  velocity_x: ^3.5.1
   rflutter_alert: ^2.0.4
   pull_to_refresh: ^2.0.0
   shared_preferences: ^2.0.8

@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/models/registration.dart';
 import 'package:mbm_voting/screens/login_screen.dart';
@@ -20,7 +18,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _rollNumber = TextEditingController();
   final TextEditingController _emailId = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  bool _isObscure = true;
+  final TextEditingController _adminPassword = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
+  bool _isObscure = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,12 +41,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Image.asset(
-                  'assets/dsc.png',
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.cover,
-                ),
+                // Image.asset(
+                //   'assets/dsc.png',
+                //   height: 150,
+                //   width: 150,
+                //   fit: BoxFit.cover,
+                // ),
                 const Text(
                   'Register',
                   style: TextStyle(fontSize: 24),
@@ -71,6 +71,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           if (value!.isEmpty) {
                             return "Roll number cannot be empty";
                           }
+                          return null;
                         },
                       ).px20(),
                       const Text(
@@ -100,11 +101,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ).px20().pOnly(top: 20),
                       TextFormField(
                         controller: _password,
-                        obscureText: _isObscure,
+                        obscureText: !_isObscure,
                         decoration: InputDecoration(
                           border: const UnderlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: 'Enter password provided by admin',
+                          labelText: 'Enter password',
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isObscure
@@ -122,6 +123,69 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           if (value!.isEmpty) {
                             return "Password cannot be empty";
                           }
+                          return null;
+                        },
+                      ).px20(),
+                      const Text(
+                        'Confirm Password',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ).px20().pOnly(top: 20),
+                      TextFormField(
+                        controller: _confirmPassword,
+                        obscureText: !_isObscure,
+                        decoration: InputDecoration(
+                          border: const UnderlineInputBorder(),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: 'Confirm password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Conform Password cannot be empty";
+                          }
+                          return null;
+                        },
+                      ).px20(),
+                      const Text(
+                        'Admin Password',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ).px20().pOnly(top: 20),
+                      TextFormField(
+                        controller: _adminPassword,
+                        obscureText: !_isObscure,
+                        decoration: InputDecoration(
+                          border: const UnderlineInputBorder(),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: 'Enter Admin password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Admin Password cannot be empty";
+                          }
+                          return null;
                         },
                       ).px20(),
                     ],
@@ -139,7 +203,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             Map<String, dynamic> request = {
                               "rollNo": _rollNumber.text,
                               "mailId": _emailId.text,
-                              "password": _password.text,
+                              "adminPassword": _adminPassword.text,
+                              "password": _password,
+                              "confirmPassword": _confirmPassword,
                             };
                             log(request.toString());
                             Repository repo = Repository();
