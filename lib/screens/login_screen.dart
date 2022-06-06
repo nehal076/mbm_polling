@@ -260,7 +260,6 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
       );
-      Alert(context: context).show();
     });
     CommonResponse response = await repo.loginUser(request);
 
@@ -313,12 +312,13 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
       );
-      Alert(context: context).show();
     });
 
     CommonResponse response = await repo.loginAdmin(request);
 
-    Navigator.pop(context);
+    setState(() {
+      Navigator.pop(context);
+    });
 
     if (response.success == true) {
       Navigator.push(
@@ -338,7 +338,9 @@ class _LoginScreenState extends State<LoginScreen> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
             width: 120,
           )
         ],

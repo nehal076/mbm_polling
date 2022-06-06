@@ -40,7 +40,10 @@ class ApiService {
                   "Okay",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+                onPressed: () {
+                  Navigator.pop(navigatorKey.currentContext!);
+                  Navigator.pop(navigatorKey.currentContext!);
+                },
                 width: 120,
               )
             ],
@@ -72,7 +75,10 @@ class ApiService {
                   "Okay",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+                onPressed: () {
+                  Navigator.pop(navigatorKey.currentContext!);
+                  Navigator.pop(navigatorKey.currentContext!);
+                },
                 width: 120,
               )
             ],

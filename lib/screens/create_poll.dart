@@ -63,6 +63,7 @@ class _CreatePollState extends State<CreatePoll> {
                           if (value!.isEmpty) {
                             return "Question cannot be empty";
                           }
+                          return null;
                         },
                       ).px20(),
                     ],

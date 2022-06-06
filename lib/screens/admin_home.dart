@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/models/all_active_polls.dart';
 import 'package:mbm_voting/models/registration.dart';

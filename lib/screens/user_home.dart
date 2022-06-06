@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mbm_voting/common/shared.dart';
 import 'package:mbm_voting/models/all_active_polls.dart';
 import 'package:mbm_voting/models/registration.dart';
 import 'package:mbm_voting/services/repository.dart';
-import 'package:mbm_voting/widgets/alert_view.dart';
 import 'package:mbm_voting/widgets/drawer.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
